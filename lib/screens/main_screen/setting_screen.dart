@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/components/icon_broken.dart';
+import 'package:social_app/controller/app_controller.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/cubit/states.dart';
 import 'package:social_app/size_config.dart';
@@ -190,7 +191,23 @@ class SettingScreen extends StatelessWidget {
                 ],
               ),
             ),
-
+            SizedBox(height: SizeConfig.scaleHeight(20),),
+            SizedBox(
+              height: SizeConfig.scaleHeight(40),
+              child: OutlinedButton(
+                onPressed: () {
+                  SocialCubit.get(context).logout();
+                  AppController.instance.logout();
+                  Navigator.pushNamed(context, '/login_screen');
+                },
+                child: Text(
+                  'logout',
+                  style: TextStyle(
+                    fontSize: SizeConfig.scaleTextFont(18),
+                  ),
+                ),
+              ),
+            ),
           ],
         );
       },

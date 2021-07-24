@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/controller/app_controller.dart';
 import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/screens/add_post_screen/add_post_screen.dart';
 import 'package:social_app/screens/edit_profile/edit_profile.dart';
@@ -22,52 +23,55 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context)=>SocialCubit()..getUserData()..getPost(),
-      child: MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'jannah',
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: defaultColor,
-            unselectedItemColor: greyColor,
-            elevation: 20,
-            backgroundColor: Colors.white,
+      return BlocProvider(
+        create: (context) => SocialCubit()
+          ..getUserData()
+          ..getPost(),
+        child: MaterialApp(
+          theme: ThemeData(
+            fontFamily: 'jannah',
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: defaultColor,
+              unselectedItemColor: greyColor,
+              elevation: 20,
+              backgroundColor: Colors.white,
+            ),
+            primarySwatch: Colors.blue,
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              titleSpacing: 20,
+              backwardsCompatibility: false,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.white,
+                statusBarIconBrightness: Brightness.dark,
+              ),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              iconTheme: IconThemeData(
+                color: Colors.black,
+                size: 15,
+              ),
+              centerTitle: false,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
-            titleSpacing:20,
-            backwardsCompatibility: false,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            iconTheme: IconThemeData(
-              color: Colors.black,
-              size: 15,
-            ),
-            centerTitle: false,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/launch_screen',
+          routes: {
+            '/launch_screen': (context) => LaunchScreen(),
+            '/login_screen': (context) => LoginScreen(),
+            '/register_screen': (context) => RegisterScreen(),
+            '/main_screen': (context) => MainScreen(),
+            '/add_post_screen': (context) => AddPostScreen(),
+            '/edit_screen': (context) => EditProfile(),
+          },
         ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/launch_screen',
-        routes: {
-          '/launch_screen': (context) => LaunchScreen(),
-          '/login_screen': (context) => LoginScreen(),
-          '/register_screen': (context) => RegisterScreen(),
-          '/main_screen': (context) => MainScreen(),
-          '/add_post_screen': (context) => AddPostScreen(),
-          '/edit_screen': (context) => EditProfile(),
-        },
-      ),
-    );
+      );
+
   }
 }

@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/controller/app_controller.dart';
 import 'package:social_app/cubit/states.dart';
+import 'package:social_app/models/message_model.dart';
 import 'package:social_app/models/post_model.dart';
 import 'package:social_app/screens/add_post_screen/add_post_screen.dart';
 import 'package:social_app/screens/main_screen/chat_screen.dart';
@@ -39,16 +41,14 @@ class SocialCubit extends Cubit<SocialState> {
   ];
 
   void changeState(int index) {
-    if(index == 1)
-          getUsers();
-      if (index == 2) {
-        emit(MainNewScreenState());
-      } else {
-        currentIndex = index;
-        emit(MainChangeState());
-      }
+    if (index == 1) getUsers();
+    if (index == 2) {
+      emit(MainNewScreenState());
+    } else {
+      currentIndex = index;
+      emit(MainChangeState());
+    }
   }
-
 
   late UserModel user;
 
@@ -376,20 +376,86 @@ class SocialCubit extends Cubit<SocialState> {
   List<UserModel> users = [];
 
   void getUsers() {
-    if(users.length == 0)
-    FirebaseFirestore.instance.collection('user').get().then((value) {
-      value.docs.forEach((element) {
-        if(element.data()['uId'] != user.uId)
-        users.add(
-          UserModel.fromJson(
-            element.data(),
-          ),
-        );
+    if (users.length == 0)
+      FirebaseFirestore.instance.collection('user').get().then((value) {
+        value.docs.forEach((element) {
+          if (element.data()['uId'] != user.uId)
+            users.add(
+              UserModel.fromJson(
+                element.data(),
+              ),
+            );
+        });
+        emit(SocialGetAllUserSuccessState());
+      }).catchError((e) {
+        print('error get all user $e');
+        emit(SocialGetAllUserErrorState());
       });
-      emit(SocialGetAllUserSuccessState());
+  }
+
+  void sendMessage({
+    required String text,
+    required String receiverId,
+    required String dateTime,
+  }) {
+    MessageModel model = MessageModel(
+        senderId: user.uId,
+        receiverId: receiverId,
+        dateTime: dateTime,
+        text: text);
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
     }).catchError((e) {
-      print('error get all user $e');
-      emit(SocialGetAllUserErrorState());
+      print('error send message $e');
+      emit(SocialSendMessageErrorState());
+    });
+
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(user.uId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((e) {
+      print('error send message $e');
+      emit(SocialSendMessageErrorState());
+    });
+  }
+
+  void logout() {
+    FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.currentUser;
+  }
+
+  List<MessageModel> messages = [];
+
+  void getMessage({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(SocialGetMessagesSuccessState());
     });
   }
 }
