@@ -7,6 +7,7 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:social_app/components/components.dart';
 import 'package:social_app/components/consts.dart';
 import 'package:social_app/controller/app_controller.dart';
+import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/screens/login_screen/cubit/cubit.dart';
 import 'package:social_app/screens/login_screen/cubit/states.dart';
 import 'package:social_app/size_config.dart';
@@ -41,7 +42,10 @@ class LoginScreen extends StatelessWidget {
           if(state is LoginSuccessState){
             AppController.instance.isLoggedIn(true);
             AppController.instance.setUId('${state.uId}');
-            Navigator.pushNamedAndRemoveUntil(context, '/main_screen', (route) => false);
+            SocialCubit.get(context).getUserData();
+           Timer(Duration(milliseconds: 750),(){
+             Navigator.pushNamedAndRemoveUntil(context, '/main_screen', (route) => false);
+           });
           }
         },
         builder: (context, state) {

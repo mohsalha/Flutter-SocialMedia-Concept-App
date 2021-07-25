@@ -21,6 +21,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
     super.initState();
     AppController.instance;
     Future.delayed(Duration(seconds: 3),(){
+      if(AppController.instance.loggedIn()){
+        SocialCubit.get(context).getUserData();
+      }
       String route = AppController.instance.loggedIn() ? '/main_screen' :'/login_screen' ;
       Navigator.pushReplacementNamed(context, route);
     });

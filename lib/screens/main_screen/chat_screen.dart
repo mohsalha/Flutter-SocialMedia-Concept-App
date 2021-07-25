@@ -8,9 +8,20 @@ import 'package:social_app/screens/chat_details/chat_details_screen.dart';
 
 import 'package:social_app/size_config.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SocialCubit.get(context).getUsers();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialState>(

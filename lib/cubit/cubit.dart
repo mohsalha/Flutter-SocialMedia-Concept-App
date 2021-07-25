@@ -45,8 +45,8 @@ class SocialCubit extends Cubit<SocialState> {
     if (index == 0) {
       getPost();
     }
-    if (index == 1) getUsers();
-    if (index == 2) {
+    if (index == 1 || index == 3) getUsers();
+    if (index == 2 ) {
       emit(MainNewScreenState());
     } else {
       currentIndex = index;
@@ -331,6 +331,7 @@ class SocialCubit extends Cubit<SocialState> {
   List<PostModel> posts = [];
 
   void getPost() {
+    print('first post');
     emit(SocialGetPostLoadingState());
     //   FirebaseFirestore.instance
     //       .collection('user')
@@ -366,6 +367,8 @@ class SocialCubit extends Cubit<SocialState> {
         .orderBy('dateTime')
         .get()
         .then((value) {
+      print('inside post');
+
       posts = [];
 
       value.docs.forEach((element) {
@@ -378,7 +381,7 @@ class SocialCubit extends Cubit<SocialState> {
       });
       print('posts is : $posts');
     }).catchError((e) {
-      print('error get user data : $e');
+      print('error get post data : $e');
       emit(SocialGetPostErrorState());
     });
   }
@@ -461,6 +464,8 @@ class SocialCubit extends Cubit<SocialState> {
   void logout() {
     FirebaseAuth.instance.signOut();
     FirebaseAuth.instance.currentUser;
+    posts = [];
+    users = [];
   }
 
   List<MessageModel> messages = [];
