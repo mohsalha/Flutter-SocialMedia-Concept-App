@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_app/controller/app_controller.dart';
+import 'package:social_app/cubit/cubit.dart';
 import 'package:social_app/size_config.dart';
 
 
@@ -18,8 +20,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
     // TODO: implement initState
     super.initState();
     AppController.instance;
-     Firebase.initializeApp();
-
     Future.delayed(Duration(seconds: 3),(){
       String route = AppController.instance.loggedIn() ? '/main_screen' :'/login_screen' ;
       Navigator.pushReplacementNamed(context, route);

@@ -30,7 +30,7 @@ class SettingScreen extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage('${cubit.cover}'),
+                          image: NetworkImage('${cubit!.cover}'),
                           fit: BoxFit.cover,
                         ),
                       ),

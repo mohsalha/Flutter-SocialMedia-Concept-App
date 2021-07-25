@@ -40,25 +40,21 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     EdgeInsets.symmetric(horizontal: SizeConfig.scaleWidth(10)),
                 child: TextButton(
                   onPressed: () {
-                   var i =  MediaQuery.of(context).viewInsets.bottom;
-print(i.toString());
+                    var i = MediaQuery.of(context).viewInsets.bottom;
+                    print(i.toString());
                     var now = DateTime.now();
                     if (cubit.postImage != null) {
-                      cubit
-                          .uploadPostImage(
+                      cubit.uploadPostImage(
                         text: _postController.text,
                         dateTime: now.toString(),
                       );
                       _postController.text = '';
-
                     } else {
-                      cubit
-                          .addNewPost(
+                      cubit.addNewPost(
                         text: _postController.text,
                         dateTime: now.toString(),
                       );
                       _postController.text = '';
-
                     }
                   },
                   child: Text(
@@ -86,7 +82,7 @@ print(i.toString());
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        '${cubit.user.image}',
+                        '${cubit.user!.image}',
                       ),
                       backgroundColor: defaultColor,
                       radius: 30,
@@ -101,7 +97,7 @@ print(i.toString());
                           Row(
                             children: [
                               Text(
-                                '${cubit.user.name}',
+                                '${cubit.user!.name}',
                                 style: TextStyle(
                                   fontSize: SizeConfig.scaleTextFont(14),
                                 ),
@@ -130,11 +126,12 @@ print(i.toString());
                       hintMaxLines: 4,
                       border: InputBorder.none,
                       hintText:
-                          'What\'s in your mind? ${cubit.user.name}......',
+                          'What\'s in your mind? ${cubit.user!.name}......',
                     ),
                   ),
                 ),
-                if (cubit.postImage != null && MediaQuery.of(context).viewInsets.bottom == 0)
+                if (cubit.postImage != null &&
+                    MediaQuery.of(context).viewInsets.bottom == 0)
                   Stack(
                     alignment: AlignmentDirectional.topEnd,
                     children: [

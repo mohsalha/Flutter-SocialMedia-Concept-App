@@ -48,14 +48,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           BlocConsumer<SocialCubit, SocialState>(
-            listener: (context, state) {},
             builder: (context, state) {
               var height = MediaQuery.of(context).size.height -
                   SizeConfig.scaleHeight(330);
               var cubit = SocialCubit.get(context);
-
-              if (cubit.likes.length > 0) {
-
+              if (cubit.user != null) {
+                cubit.getPost();
+                if (cubit.posts.length > 0) {
                   return Column(
                     children: [
                       ListView.separated(
@@ -64,11 +63,11 @@ class HomeScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return buildPostItem(
                             cubit.posts[index],
-                            userImage: cubit.user.image ?? '',
-                            likes: ' ${cubit.likes[index]}',
+                            userImage: cubit.user!.image ?? '',
+                            likes: ' 0',
                             commentFunction: () {},
                             likeFunction: () {
-                              cubit.likePost(cubit.postsId[index]);
+                              // cubit.likePost(cubit.postsId[index]);
                             },
                           );
                         },
@@ -81,18 +80,24 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   );
-
-
-
-              }else{
-                return SizedBox(height: height,
+                } else {
+                  return SizedBox(
+                    height: height,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              } else {
+                return SizedBox(
+                  height: height,
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               }
-
             },
+            listener: (context, state) {},
           ),
         ],
       ),
