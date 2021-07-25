@@ -9,28 +9,16 @@ import 'package:social_app/screens/chat_details/chat_details_screen.dart';
 import 'package:social_app/screens/profile_details/profile_follow.dart';
 import 'package:social_app/size_config.dart';
 
-class UserScreen extends StatefulWidget {
+class UserScreen extends StatelessWidget {
   const UserScreen({Key? key}) : super(key: key);
 
-  @override
-  _UserScreenState createState() => _UserScreenState();
-}
-
-class _UserScreenState extends State<UserScreen> {
- @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    SocialCubit.get(context).getUsers();
-
- }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
-        if (cubit.users.length > 0)
+        if (cubit.users.length > 0) {
           return ListView.separated(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
@@ -44,9 +32,21 @@ class _UserScreenState extends State<UserScreen> {
                 );
               },
               itemCount: cubit.users.length);
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        } else if (cubit.users.length == 0) {
+          return Center(
+            child: Text(
+              'sorry not found users, yet',
+              style: TextStyle(
+                fontSize: SizeConfig.scaleTextFont(18),
+                color: Colors.black,
+              ),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }
@@ -76,7 +76,10 @@ class _UserScreenState extends State<UserScreen> {
             Spacer(),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatDetailsScreen(user)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatDetailsScreen(user)));
               },
               child: Container(
                 padding: EdgeInsets.all(SizeConfig.scaleHeight(8)),
@@ -88,8 +91,10 @@ class _UserScreenState extends State<UserScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileFollow(user)));
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProfileFollow(user)));
               },
               child: Container(
                 padding: EdgeInsets.all(SizeConfig.scaleHeight(8)),

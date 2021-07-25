@@ -46,7 +46,7 @@ class SocialCubit extends Cubit<SocialState> {
       getPost();
     }
     if (index == 1 || index == 3) getUsers();
-    if (index == 2 ) {
+    if (index == 2) {
       emit(MainNewScreenState());
     } else {
       currentIndex = index;
@@ -362,7 +362,7 @@ class SocialCubit extends Cubit<SocialState> {
     // });
     FirebaseFirestore.instance
         .collection('user')
-        .doc(user!.uId)
+        .doc(AppController.instance.getUId())
         .collection('posts')
         .orderBy('dateTime')
         .get()

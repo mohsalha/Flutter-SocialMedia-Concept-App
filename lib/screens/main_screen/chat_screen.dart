@@ -8,31 +8,20 @@ import 'package:social_app/screens/chat_details/chat_details_screen.dart';
 
 import 'package:social_app/size_config.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatelessWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
- @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    SocialCubit.get(context).getUsers();
-  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialState>(
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = SocialCubit.get(context);
-        if (cubit.users.length > 0)
+        if (cubit.users.length > 0) {
           return ListView.separated(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                return buildChatItem(cubit.users[index],context);
+                return buildChatItem(cubit.users[index], context);
               },
               separatorBuilder: (context, index) {
                 return Container(
@@ -42,16 +31,29 @@ class _ChatScreenState extends State<ChatScreen> {
                 );
               },
               itemCount: cubit.users.length);
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        } else if (cubit.users.length == 0) {
+          return Center(
+            child: Text(
+              'sorry not found users, yet',
+              style: TextStyle(
+                fontSize: SizeConfig.scaleTextFont(18),
+                color: Colors.black,
+              ),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }
 
-  Widget buildChatItem(UserModel user,BuildContext context) => InkWell(
+  Widget buildChatItem(UserModel user, BuildContext context) => InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatDetailsScreen(user)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ChatDetailsScreen(user)));
         },
         child: Padding(
           padding: EdgeInsets.all(

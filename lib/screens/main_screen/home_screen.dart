@@ -15,13 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(SocialCubit.get(context).user != null)
+    if (SocialCubit.get(context).user == null) {
       SocialCubit.get(context).getPost();
+      return;
+    } else {
+      SocialCubit.get(context).getPost();
+    }
   }
 
   @override
@@ -72,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizeConfig.scaleHeight(330);
                     var cubit = SocialCubit.get(context);
                     if (cubit.user != null) {
-
                       if (cubit.posts.length > 0) {
                         return Column(
                           children: [
